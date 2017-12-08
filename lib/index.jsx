@@ -2,14 +2,54 @@ import React from 'react'
 import ExcelDropzone from './excel-dropzone.jsx'
 import { MTRow, MTColumn } from 'mt-ui'
 
+// Local dataset imports
+import users from "../lib/user"
+import scores from "../lib/scores"
+
 export default class Main extends React.Component {
+  constructor(props){
+    super(props);
+  }
+
 
   handleSheetData (data) {
     // replace this log with actual handling of the data
     console.log(data)
   }
 
+  getInitialDataset(data){
+    console.log(users);
+    console.log(scores);
+  }
+
   render () {
+    function ScoreTile(props){
+      const items = users.map((item) => (
+        <div key={item._id} className="score-tile">
+          <p>ID: {item._id} | Name: {item.name}</p>
+          <p>Scores: {getScores(item._id)}</p>
+        </div>
+      ));
+
+      return (
+        <div className="score-tile">
+            {items}
+        </div>
+      )
+    }
+
+    function getScores(id){
+      let values = [];
+      let largestValue = 0;  
+      for(let i=0; i<scores.length; i++){
+        if(scores[i].userId === id){
+          values.push(scores[i].score.toString());
+        }
+      }
+      values.sort(function(a,b){return b-a});
+      return values.join(", ");
+    }
+
     return (
       <div className="container container--centered">
         <h1 className="m-t">Mediatool exercise</h1>
@@ -42,6 +82,13 @@ export default class Main extends React.Component {
                 <li>The total width and offset of the columns in a row should equal 100</li>
                 <li>It is also possible to nest rows and columns within each other</li>
               </ul>
+            </div>
+          </MTColumn>
+        </MTRow>
+        <MTRow>
+          <MTColumn>
+            <div className="scoreboard">
+              <ScoreTile dataset={this.getInitialDataset()}/> 
             </div>
           </MTColumn>
         </MTRow>
