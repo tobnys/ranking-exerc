@@ -22,18 +22,28 @@ export default class Main extends React.Component {
     this.handleSheetData = this.handleSheetData.bind(this);
   }
 
-  handleSheetData(data) {
-    const items = data.map(user => {
+  handleSheetData(data){
+
+    // Filter out duplicate strings
+    let filtered = data.filter(function (a) {
+      if (!this.has(a.name)) {
+          this.set(a.name, true);
+          return true;
+      }
+    }, new Map);
+
+    // Iterate over the filtered array and set the state for each
+    for(let i=0; i<filtered.length; i++){  
       let newUser = {
-        name: user.name,
-        score: user.score,
+        name: filtered[i].name,
+        score: filtered[i].score,
         id: this.state.globalId
       }
       this.setState({ 
         users: [...this.state.users, newUser]
       })
       this.setState({globalId: this.state.globalId+1})
-    })
+    }
   }
 
   handleFormChange(e){
@@ -47,21 +57,34 @@ export default class Main extends React.Component {
 
   handleSubmit(e){
     e.preventDefault();
-    console.log(this.state.users);
-    // NAME VALIDATION LAYER
-    if(this.state.name === "Barry" || this.state.name === "Jane" || this.state.name === "Kim"){
-      console.log("User already exists.");
+    let newUser = {
+      name: this.state.tempName,
+      score: this.state.tempScore,
+      id: this.state.globalId
     }
-    else {
-      let newUser = {
-        name: this.state.tempName,
-        score: this.state.tempScore,
-        id: this.state.globalId
-      }
+
+    // NAME VALIDATION LAYER
+    if(this.state.users.length === 0){
+      console.log("SET INITIAL state")
       this.setState({ 
         users: [...this.state.users, newUser]
       })
       this.setState({globalId: this.state.globalId+1})
+    }
+    else {
+      for(let i=0; i<this.state.users.length; i++){
+        if(newUser.name === this.state.users[i].name){
+          console.log("User already exists.");
+          //break;
+        }
+        else {
+          console.log("SET state")
+          this.setState({ 
+            users: [...this.state.users, newUser]
+          })
+          this.setState({globalId: this.state.globalId+1})
+        }
+      }
     }
   }
   
@@ -112,7 +135,7 @@ export default class Main extends React.Component {
 
     return (
       <div className="container container--centered">
-        <h1 className="m-t">Mediatool exercise</h1>
+        <h1 className="m-t">Mediatool</h1>
         <MTRow>
           <MTColumn width={ 20 }>
             <ExcelDropzone
@@ -121,7 +144,7 @@ export default class Main extends React.Component {
             />
           </MTColumn>
           <MTColumn width={ 75 } offset={ 5 }>
-            <div>
+            <div className="form-container">
               <h2>Add new tile</h2>
               <p>Use the form below to add new users to the scoreboard.</p>
               <form onSubmit={this.handleSubmit}>
@@ -131,7 +154,7 @@ export default class Main extends React.Component {
                 <label>
                   Score: <input type="number" name="score" value={this.state.value} onChange={this.handleFormChange} />
                 </label>
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" id="input-btn" />
               </form>
             </div>
           </MTColumn>
