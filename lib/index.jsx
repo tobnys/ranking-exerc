@@ -13,7 +13,8 @@ export default class Main extends React.Component {
     this.state = {
       tempName: "",
       tempScore: "",
-      users: {name: "", score: ""}
+      globalId: 4,
+      users: []
     }
 
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -42,21 +43,37 @@ export default class Main extends React.Component {
       console.log("User already exists.");
     }
     else {
-      this.addNewTile();
+      let newUser = {
+        name: this.state.tempName,
+        score: this.state.tempScore,
+        id: this.state.globalId
+      }
+      this.setState({ 
+        users: [...this.state.users, newUser]
+      })
+      this.setState({globalId: this.state.globalId+1})
     }
   }
-
-  addNewTile(){
-    let newUser = {
-      name: this.state.tempName,
-      score: this.state.tempScore 
-    }
-    this.setState({ 
-      users: [...this.state.users, newUser]
-    })
-  }
-
+  
   render () {
+    const stateUsers = this.state.users;
+    console.log(stateUsers)
+    console.log(this.state.globalId)
+
+    function NewScoreTile(props){
+      const items = stateUsers.map((user) => (
+        <div key={user.id} className="score-tile">
+          <p><b>ID:</b> {user.id} | <b>Name:</b> {user.name}</p>
+          <p><b>Scores:</b> {user.score}</p>
+        </div>
+      ));
+  
+      return (
+        <div className="score-tile">
+            {items}
+        </div>
+      )
+    }
 
     function ScoreTile(props){
       const items = users.map((item) => (
@@ -115,6 +132,7 @@ export default class Main extends React.Component {
           <MTColumn>
             <div className="scoreboard">
               <ScoreTile /> 
+              <NewScoreTile />
             </div>
           </MTColumn>
         </MTRow>
