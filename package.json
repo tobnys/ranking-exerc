@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node demo/server.js",
     "demo": "node demo/server.js",
     "build": "mkdir -p dist && browserify -t babelify lib/index.js > dist/react-starter-kit.js"
   },
