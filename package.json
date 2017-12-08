@@ -1,0 +1,33 @@
+{
+  "name": "react-starter-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "demo": "node demo/server.js",
+    "build": "mkdir -p dist && browserify -t babelify lib/index.js > dist/react-starter-kit.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mt-ui": "^0.6.13",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-dropzone": "^4.2.3",
+    "xlsx": "^0.11.12"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.7.5",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.5.0",
+    "babelify": "^8.0.0",
+    "browserify": "^14.5.0",
+    "connect": "^3.6.5",
+    "less": "^2.7.3",
+    "less-plugin-npm-import": "^2.1.0",
+    "livereload": "^0.6.0",
+    "mkdirp": "^0.5.1",
+    "serve-static": "^1.13.1",
+    "watchify": "^3.7.0"
+  }
+}
