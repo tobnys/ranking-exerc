@@ -19,11 +19,21 @@ export default class Main extends React.Component {
 
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleSheetData = this.handleSheetData.bind(this);
   }
 
-  handleSheetData (data) {
-    // replace this log with actual handling of the data
-    console.log(data)
+  handleSheetData(data) {
+    const items = data.map(user => {
+      let newUser = {
+        name: user.name,
+        score: user.score,
+        id: this.state.globalId
+      }
+      this.setState({ 
+        users: [...this.state.users, newUser]
+      })
+      this.setState({globalId: this.state.globalId+1})
+    })
   }
 
   handleFormChange(e){
@@ -57,8 +67,6 @@ export default class Main extends React.Component {
   
   render () {
     const stateUsers = this.state.users;
-    console.log(stateUsers)
-    console.log(this.state.globalId)
 
     function NewScoreTile(props){
       const items = stateUsers.map((user) => (
@@ -121,7 +129,7 @@ export default class Main extends React.Component {
                   Name: <input type="text" name="name" value={this.state.value} onChange={this.handleFormChange} />
                 </label>
                 <label>
-                  Score: <input type="text" name="score" value={this.state.value} onChange={this.handleFormChange} />
+                  Score: <input type="number" name="score" value={this.state.value} onChange={this.handleFormChange} />
                 </label>
                 <input type="submit" value="Submit" />
               </form>
