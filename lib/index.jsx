@@ -11,8 +11,9 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
-      name: "",
-      score: 0
+      tempName: "",
+      tempScore: "",
+      users: {name: "", score: ""}
     }
 
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -26,31 +27,36 @@ export default class Main extends React.Component {
 
   handleFormChange(e){
     if(e.target.name === "name"){
-      this.setState({name: e.target.value});
+      this.setState({tempName: e.target.value});
     }
     else {
-      this.setState({score: e.target.value});
+      this.setState({tempScore: e.target.value});
     }
   }
 
   handleSubmit(e){
     e.preventDefault();
-    console.log("Name:", this.state.name, "Score:", this.state.score);
+    console.log(this.state.users);
+    // NAME VALIDATION LAYER
     if(this.state.name === "Barry" || this.state.name === "Jane" || this.state.name === "Kim"){
       console.log("User already exists.");
     }
     else {
-      addNewTile();
+      this.addNewTile();
     }
   }
 
-
+  addNewTile(){
+    let newUser = {
+      name: this.state.tempName,
+      score: this.state.tempScore 
+    }
+    this.setState({ 
+      users: [...this.state.users, newUser]
+    })
+  }
 
   render () {
-
-    function addNewTile(){
-
-    }
 
     function ScoreTile(props){
       const items = users.map((item) => (
