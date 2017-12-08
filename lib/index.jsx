@@ -9,25 +9,54 @@ import scores from "../lib/scores"
 export default class Main extends React.Component {
   constructor(props){
     super(props);
-  }
 
+    this.state = {
+      name: "",
+      score: 0
+    }
+
+    this.handleFormChange = this.handleFormChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
   handleSheetData (data) {
     // replace this log with actual handling of the data
     console.log(data)
   }
 
-  getInitialDataset(data){
-    console.log(users);
-    console.log(scores);
+  handleFormChange(e){
+    if(e.target.name === "name"){
+      this.setState({name: e.target.value});
+    }
+    else {
+      this.setState({score: e.target.value});
+    }
   }
 
+  handleSubmit(e){
+    e.preventDefault();
+    console.log("Name:", this.state.name, "Score:", this.state.score);
+    if(this.state.name === "Barry" || this.state.name === "Jane" || this.state.name === "Kim"){
+      console.log("User already exists.");
+    }
+    else {
+      addNewTile();
+    }
+  }
+
+
+
   render () {
+
+    function addNewTile(){
+
+    }
+
     function ScoreTile(props){
       const items = users.map((item) => (
         <div key={item._id} className="score-tile">
-          <p>ID: {item._id} | Name: {item.name}</p>
-          <p>Scores: {getScores(item._id)}</p>
+          <p><b>ID:</b> {item._id} | <b>Name:</b> {item.name}</p>
+          <p><b>Scores:</b> {getScores(item._id)}</p>
         </div>
       ));
 
@@ -62,33 +91,24 @@ export default class Main extends React.Component {
           </MTColumn>
           <MTColumn width={ 75 } offset={ 5 }>
             <div>
-              <h2>Initial site</h2>
-              <p>
-                Drop the excel file "scores.xlsx" that you will find in this repo in the area to the left and watch the log output in the console.
-                We hope this is enough to get you started with the import.
-              </p>
-            </div>
-            <div>
-              <h2>Explaining the grid</h2>
-              <p>
-                In the Mediatool grid you can use MTRow and MTColumn to structure your graphical components.
-                This is basically what you need to know:
-              </p>
-              <ul>
-                <li>Each row will be located beneath the previous one</li>
-                <li>Columns in one row will stretch to the width of the entire parent component and they will have the same size unless you provide them with a with property</li>
-                <li>If you set the width you do so in percent</li>
-                <li>You can also use offset to create space betweeen your columns</li>
-                <li>The total width and offset of the columns in a row should equal 100</li>
-                <li>It is also possible to nest rows and columns within each other</li>
-              </ul>
+              <h2>Add new tile</h2>
+              <p>Use the form below to add new users to the scoreboard.</p>
+              <form onSubmit={this.handleSubmit}>
+                <label>
+                  Name: <input type="text" name="name" value={this.state.value} onChange={this.handleFormChange} />
+                </label>
+                <label>
+                  Score: <input type="text" name="score" value={this.state.value} onChange={this.handleFormChange} />
+                </label>
+                <input type="submit" value="Submit" />
+              </form>
             </div>
           </MTColumn>
         </MTRow>
         <MTRow>
           <MTColumn>
             <div className="scoreboard">
-              <ScoreTile dataset={this.getInitialDataset()}/> 
+              <ScoreTile /> 
             </div>
           </MTColumn>
         </MTRow>
