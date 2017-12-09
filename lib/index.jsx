@@ -11,11 +11,12 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
-      staticUsers: [{id: 1, showScore: "hide"}, {id: 2, showScore: "hide"}, {id: 3, showScore: "hide"}],
       tempName: "",
       tempScore: "",
       globalId: 4,
-      users: []
+      users: users.map(
+        usr => Object.assign({}, usr, {showScore: false})
+      )
     }
 
     this.handleFormChange = this.handleFormChange.bind(this);
@@ -77,6 +78,7 @@ export default class Main extends React.Component {
   }
 
   handleClick(id){
+    console.log(id);
     if(this.state.staticUsers[id-1].showScore === "hide"){
       this.setState({
         staticUsers: [{id: id, showScore: "active"}]  
@@ -108,18 +110,20 @@ export default class Main extends React.Component {
             {items}
         </div>
       )
-    } 
+    }
+      
 
 
-      const items = users.map((item) => (
-        <div key={item._id} className="score-tile-item-2" onClick={() => handleClick(item._id)}>
-          <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
-          <div className={staticUsers[1].showScore}>
-            <p>Scores: {getScores(item._id)}</p>
-          </div>
+    /*
+    const items = users.map((item) => (
+      <button key={item._id} className="score-tile-item-2" onClick={() => handleClick(item._id)}>
+        <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
+        <div className={staticUsers[1].showScore}>
+          <p>Scores: {getScores(item._id)}</p>
         </div>
-      ));
-
+      </button>
+    ));
+    */
 
     function getScores(id){
       let values = [];
@@ -162,7 +166,6 @@ export default class Main extends React.Component {
         <MTRow>
           <MTColumn>
             <div className="scoreboard">
-              {items}
               <NewScoreTile />
             </div>
           </MTColumn>
