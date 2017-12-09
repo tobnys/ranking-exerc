@@ -80,46 +80,28 @@ export default class Main extends React.Component {
     const stateUsers = this.state.users;
     const staticUsers = this.state.staticUsers;
 
-    function NewScoreTile(props){
-      const items = stateUsers.map((user) => (
-        <div key={user.id} className="score-tile-item">
-          <p><b>ID:</b> {user.id} | <b>Name:</b> {user.name}</p>
-          <p><b>Scores:</b> {user.score}</p>
-        </div>
-      ));
-  
-      return (
-        <div className="score-tile">
-            {items}
-        </div>
-      )
-    } 
-
-
-      const items = users.map((item) => (
-        <div key={item._id} className="score-tile-item-2" onClick={() => this.setState({clickedUser: item._id})}>
-          <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
-          {this.state.clickedUser === item._id ? 
-            <div>
-            <p>Scores: {getScores(item._id)}</p>
-            </div>
-            : ""
-          }
-        </div>
-      ));
-
-
-    /*
-    const items = users.map((item) => (
-      <button key={item._id} className="score-tile-item-2" onClick={() => handleClick(item._id)}>
-        <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
-        <div className={staticUsers[1].showScore}>
-          <p>Scores: {getScores(item._id)}</p>
-        </div>
-      </button>
+    const items2 = stateUsers.map((user) => (
+      <div key={user.id} className="score-tile-item-2" onClick={() => this.setState({clickedUser: user.id})}>
+        <p data={user.id}>ID: {user.id} | Name: {user.name}</p>
+        {this.state.clickedUser === user.id ? 
+          <div>
+          <p>Scores: {user.score}</p>
+          </div>
+          : ""}
+      </div>
     ));
-    */
-
+  
+    const items = users.map((item) => (
+      <div key={item._id} className="score-tile-item-2" onClick={() => this.setState({clickedUser: item._id})}>
+        <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
+        {this.state.clickedUser === item._id ? 
+          <div>
+          <p>Scores: {getScores(item._id)}</p>
+          </div>
+          : ""}
+      </div>
+    ));
+    
     function getScores(id){
       let values = [];
       let largestValue = 0;  
@@ -162,7 +144,7 @@ export default class Main extends React.Component {
           <MTColumn>
             <div className="scoreboard">
               {items}
-              <NewScoreTile />
+              {items2}
             </div>
           </MTColumn>
         </MTRow>
