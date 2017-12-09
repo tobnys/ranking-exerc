@@ -11,18 +11,17 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
+      staticUsers: [{id: 1, showScore: "hide"}, {id: 2, showScore: "hide"}, {id: 3, showScore: "hide"}],
       tempName: "",
       tempScore: "",
       globalId: 4,
-      users: users.map(
-        usr => Object.assign({}, usr, {showScore: false})
-      )
+      users: [],
+      clickedUser: null
     }
 
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSheetData = this.handleSheetData.bind(this);
-    this.handleClick = this.handleClick.bind(this);
   }
 
   handleSheetData(data){
@@ -77,24 +76,8 @@ export default class Main extends React.Component {
     }
   }
 
-  handleClick(id){
-    console.log(id);
-    if(this.state.staticUsers[id-1].showScore === "hide"){
-      this.setState({
-        staticUsers: [{id: id, showScore: "active"}]  
-      });
-    } 
-    else {
-      this.setState({
-        staticUsers: [{id: id, showScore: "hide"}]
-      });
-    }
-
-  }
-
   render () {
     const stateUsers = this.state.users;
-    const handleClick = this.handleClick
     const staticUsers = this.state.staticUsers;
 
     function NewScoreTile(props){
@@ -110,8 +93,20 @@ export default class Main extends React.Component {
             {items}
         </div>
       )
-    }
-      
+    } 
+
+
+      const items = users.map((item) => (
+        <div key={item._id} className="score-tile-item-2" onClick={() => this.setState({clickedUser: item._id})}>
+          <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
+          {this.state.clickedUser === item._id ? 
+            <div>
+            <p>Scores: {getScores(item._id)}</p>
+            </div>
+            : ""
+          }
+        </div>
+      ));
 
 
     /*
@@ -166,6 +161,7 @@ export default class Main extends React.Component {
         <MTRow>
           <MTColumn>
             <div className="scoreboard">
+              {items}
               <NewScoreTile />
             </div>
           </MTColumn>
