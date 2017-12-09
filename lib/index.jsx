@@ -11,6 +11,7 @@ export default class Main extends React.Component {
     super(props);
 
     this.state = {
+      staticUsers: [{id: 1, showScore: "hide"}, {id: 2, showScore: "hide"}, {id: 3, showScore: "hide"}],
       tempName: "",
       tempScore: "",
       globalId: 4,
@@ -20,6 +21,7 @@ export default class Main extends React.Component {
     this.handleFormChange = this.handleFormChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSheetData = this.handleSheetData.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleSheetData(data){
@@ -64,36 +66,38 @@ export default class Main extends React.Component {
     }
 
     // NAME VALIDATION LAYER
-    if(this.state.users.length === 0){
-      console.log("SET INITIAL state")
+    if (this.state.users.find(usr => usr.name.toLowerCase() === newUser.name.toLowerCase())){
+      console.log("Already saved this name")
+    } else {
       this.setState({ 
         users: [...this.state.users, newUser]
       })
       this.setState({globalId: this.state.globalId+1})
     }
-    else {
-      for(let i=0; i<this.state.users.length; i++){
-        if(newUser.name === this.state.users[i].name){
-          console.log("User already exists.");
-          //break;
-        }
-        else {
-          console.log("SET state")
-          this.setState({ 
-            users: [...this.state.users, newUser]
-          })
-          this.setState({globalId: this.state.globalId+1})
-        }
-      }
-    }
   }
-  
+
+  handleClick(id){
+    if(this.state.staticUsers[id-1].showScore === "hide"){
+      this.setState({
+        staticUsers: [{id: id, showScore: "active"}]  
+      });
+    } 
+    else {
+      this.setState({
+        staticUsers: [{id: id, showScore: "hide"}]
+      });
+    }
+
+  }
+
   render () {
     const stateUsers = this.state.users;
+    const handleClick = this.handleClick
+    const staticUsers = this.state.staticUsers;
 
     function NewScoreTile(props){
       const items = stateUsers.map((user) => (
-        <div key={user.id} className="score-tile">
+        <div key={user.id} className="score-tile-item">
           <p><b>ID:</b> {user.id} | <b>Name:</b> {user.name}</p>
           <p><b>Scores:</b> {user.score}</p>
         </div>
@@ -104,22 +108,18 @@ export default class Main extends React.Component {
             {items}
         </div>
       )
-    }
+    } 
 
-    function ScoreTile(props){
+
       const items = users.map((item) => (
-        <div key={item._id} className="score-tile">
-          <p><b>ID:</b> {item._id} | <b>Name:</b> {item.name}</p>
-          <p><b>Scores:</b> {getScores(item._id)}</p>
+        <div key={item._id} className="score-tile-item-2" onClick={() => handleClick(item._id)}>
+          <p data={item._id}>ID: {item._id} | Name: {item.name}</p>
+          <div className={staticUsers[1].showScore}>
+            <p>Scores: {getScores(item._id)}</p>
+          </div>
         </div>
       ));
 
-      return (
-        <div className="score-tile">
-            {items}
-        </div>
-      )
-    }
 
     function getScores(id){
       let values = [];
@@ -149,10 +149,10 @@ export default class Main extends React.Component {
               <p>Use the form below to add new users to the scoreboard.</p>
               <form onSubmit={this.handleSubmit}>
                 <label>
-                  Name: <input type="text" name="name" value={this.state.value} onChange={this.handleFormChange} />
+                  Name <input type="text" name="name" value={this.state.value} onChange={this.handleFormChange} />
                 </label>
                 <label>
-                  Score: <input type="number" name="score" value={this.state.value} onChange={this.handleFormChange} />
+                  Score <input type="number" name="score" value={this.state.value} onChange={this.handleFormChange} />
                 </label>
                 <input type="submit" value="Submit" id="input-btn" />
               </form>
@@ -162,7 +162,7 @@ export default class Main extends React.Component {
         <MTRow>
           <MTColumn>
             <div className="scoreboard">
-              <ScoreTile /> 
+              {items}
               <NewScoreTile />
             </div>
           </MTColumn>
